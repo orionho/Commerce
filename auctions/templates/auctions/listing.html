@@ -1,0 +1,35 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h1>{{ listing.title }}</h1>
+    Category: <a href="{% url 'display_category' listing.category %}">{{ listing.category }}</a>
+    <h3>{{ listing.description }}</h3>
+    <h3>starting price: {{ listing.startingbid }}</h3>
+    <h2>Current Bid: {{ listing.highest_bid.amount }}</h2>
+    <br>
+    <form method="POST" action="{% url 'place_bid' listing.id %}">
+        {% csrf_token %}
+        <label for="bid_amount">Bid Amount:</label>
+        <input type="number" name="bid_amount" min="{{ listing.highest_bid }}" step="0.01" required>
+        <input type="submit" value="Place Bid"> 
+    </form>
+    <img src ="{{ listing.item_img.url }}" class="img-responsive" alt="{{ title }}" style="max-height:300px">
+    {% if user in listing.watchlist_user.all %}
+        <form method="POST" action="{% url 'remove_from_watchlist' listing.id %}">
+            {% csrf_token %}
+            <input type="submit" value="Remove from Watchlist">
+        </form>
+    {% else %}
+        <form method="POST" action="{% url 'add_to_watchlist' listing.id %}">
+            {% csrf_token %}
+            <input type="submit" value="Add to Watchlist">
+        </form>
+    {% endif %}
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

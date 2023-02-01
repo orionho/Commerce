@@ -1,0 +1,12 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<title>Items by Category</title>
+
+    {% for listing in listings %}
+        <h2>{{ listing.title }}</h2>
+        <p>{{ listing.description }}</p>
+        <p>Category: {{ listing.get_category_display }}</p>
+    {% endfor %}
+{% endblock %}

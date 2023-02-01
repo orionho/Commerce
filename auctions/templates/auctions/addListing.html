@@ -1,0 +1,26 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h1>Create a new listing</h1>
+    <form method = "POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload</button>
+    </form>
+{% endblock %}
+
+
+<!--make a nicer form later on -->
+
+
+<!-- <label>Title: </label>
+        <input type="text" name="title" placeholder="Enter a title">
+        <br/> 
+        <label>Description: </label>
+        <input type="text" name="description" placeholder="Enter a short description">
+        <br/>
+        <label>Starting Bid: </label>
+        <input type="number" name="startingbid" step="0.01" placeholder="Enter starting bid">
+        <br/>
+        <input type="submit"> 
+-->

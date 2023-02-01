@@ -1,0 +1,16 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+{% for listing in watchlist %}
+    <li>
+        <li><a href = "{% url 'listing' listing.id %}">{{ listing.title }}</a></li>
+        <p>{{ listing.description }}</p>
+        <img src="{{ listing.item_img.url }}" class="img-responsive" alt="{{ listing.title }} image" style="max-height:300px">
+        <form method="POST" action="{% url 'remove_from_watchlist' listing.id %}">
+            {% csrf_token %}
+            <input type="submit" value="Remove from Watchlist">
+        </form>
+    </li>
+
+{% endfor %}
+{% endblock %}
