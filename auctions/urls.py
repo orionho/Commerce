@@ -14,7 +14,9 @@ urlpatterns =   [
     path("watchlist", views.watchlist, name="watchlist"),
     path("watchlist/add/<int:listing_id>", views.add_to_watchlist, name = "add_to_watchlist"),
     path("watchlist/remove/<int:listing_id>", views.remove_from_watchlist, name = "remove_from_watchlist"),
-    path("placebid/<int:listing_id>", views.place_bid, name="place_bid")
+    path("placebid/<int:listing_id>", views.place_bid, name="place_bid"),
+    path("closebid/<int:listing_id>", views.closebid, name="closebid"),
+    path("add_comment", views.comment, name= "add_comment")
 ]
 
 if settings.DEBUG:

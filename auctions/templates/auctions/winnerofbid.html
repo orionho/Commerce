@@ -1,0 +1,14 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h1>You have won the bid!</h1>
+    <div class="comments">
+        {% for comment in comments %}
+            <div class="comment">
+                <p>{{ comment.text }}</p>
+                <p>by {{ comment.author }}</p>
+                <p>on {{ comment.created_date }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -69,20 +69,41 @@ def register(request):
         return render(request, "auctions/register.html")
 
 def listing(request, listing_id):
-    listing = Item.objects.get(id=listing_id) 
-    return render(request, "auctions/listing.html",
-    {
-        "listing": listing 
-    })
-    
+    listing = Item.objects.get(id=listing_id)
+    user = request.user
+    comments = listing.comments.all()
+    if listing.is_open==False:
+        try:
+            highest_bidder = listing.highest_bid().user
+            if user==highest_bidder:
+                return render(request, "auctions/winnerofbid.html", 
+                {
+                    'comments':comments
+                })
+            else:
+                return render(request, "auctions/closebid.html")
+        except:
+            return render(request, "auctions/closebid.html")
+    elif listing.owner==user:
+        return render(request, "auctions/ownerlisting.html",
+        {
+            "listing":listing
+        })
+    else:
+        return render(request, "auctions/listing.html",
+        {
+            "listing": listing 
+        })
+        
 def newlisting(request):
     if request.method == 'POST':
         form = ItemForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            listing = form.instance 
+            listing = form.save(commit=False)
+            listing.owner=request.user
+            listing.save()
             #bid = Bid.objects.create(listing=listing, user=request.user, amount=listing.startingbid)
-            return render(request, 'auctions/listing.html', 
+            return render(request, 'auctions/ownerlisting.html', 
             {
                 'listing':listing
             })
@@ -143,12 +164,29 @@ def place_bid(request, listing_id):
             messages.success(request, 'Bid placed successfilly')
         else:
             messages.error(request, 'Bid amount should be greater than the starting price.')
-        return redirect('listing', listing_id)        
+        return redirect('listing', listing_id)    
 
-    
+def closebid(request, listing_id):
+    item = Item.objects.get(id=listing_id)
+    # You may want to add additional security checks to make sure the user is the owner of the item
+    if request.method == 'POST':
+        item.closebid()
+        return redirect('listing', listing_id)
+    return render(request, 'closebid.html')  
 
+def comment(request, listing_id):
+    listing = Item.objects.get(id=listing_id)  
+    user = request.user
+    message = request.POST.get('comment')
+    comment = Comment.objects.create(listing=listing, user=user, comment=message)
+    return redirect('listing', listing_id)
 
-
+def viewcomments(request, listing_id):
+    listing = Item.objects.get(id=listing_id)  
+    user = request.user
+    message = request.POST.get('comment')
+    comment = Comment.objects.create(listing=listing, user=user, comment=message)
+    return redirect('listing', listing_id)
 
     #if bid_amount > listing.highest_bid().amount:
         #bid = Bid.objects.create(listing=listing, user=user, amount=bid_amount)

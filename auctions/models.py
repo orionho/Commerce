@@ -24,19 +24,26 @@ class Item(models.Model):
     item_img = models.ImageField(upload_to='images', default='path/to/my/default/image.jpg')
     category = models.CharField(max_length=64, choices=Category_Choices, default='miscellaneous')
     watchlist_user = models.ManyToManyField(User, related_name='watchlists', blank=True)
+    is_open = models.BooleanField(default=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='items')
 
     def __str__(self):
-
         return self.title
 
     def highest_bid(self):
         highest_bid = self.bid_set.latest('amount')
         return highest_bid
+    
+    def closebid(self):        
+        self.is_open = False
+        self.save()
+
 
 class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
         fields = ['title', 'description', 'startingbid', 'item_img','category']   
+        
 
 class Bid(models.Model):
     listing = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
@@ -45,7 +52,13 @@ class Bid(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
 
 class Comment(models.Model): 
-    pass 
+    listing = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='comments', null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    comment = models.CharField(max_length=128, default='')
+    timestamp = models.DateTimeField(auto_now_add=True, null=True)
+
+    def __str__(self):
+        return self.comment
 
 class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
