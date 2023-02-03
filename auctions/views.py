@@ -87,12 +87,14 @@ def listing(request, listing_id):
     elif listing.owner==user:
         return render(request, "auctions/ownerlisting.html",
         {
-            "listing":listing
+            "listing":listing,
+            'comments': comments
         })
     else:
         return render(request, "auctions/listing.html",
         {
-            "listing": listing 
+            "listing": listing, 
+            'comments': comments
         })
         
 def newlisting(request):
@@ -116,9 +118,11 @@ def newlisting(request):
         
 def display_category(request, category):
     listings = Item.objects.filter(category=category)
+    category = category
     return render(request, 'auctions/listingsbycategory.html',
     {
-        'listings': listings
+        'listings': listings,
+        'category':category
     }) 
 
 @login_required
@@ -145,27 +149,33 @@ def remove_from_watchlist(request, listing_id):
     listing.watchlist_user.remove(user)
     return redirect('watchlist')
 
+@login_required
 def place_bid(request, listing_id):
     listing = Item.objects.get(id=listing_id)
     user = request.user
     bid_amount = Decimal(request.POST.get('bid_amount'))
-    try:
-        current_price = listing.highest_bid().amount
-        if bid_amount > current_price:
-            bid = Bid.objects.create(listing=listing, user=user, amount=bid_amount)
-            messages.success(request, 'Bid placed successfilly')
-        else:
-            messages.error(request, 'Bid amount should be greater than the current bid')
-        return redirect('listing', listing_id)        
-    except:
-        current_price = listing.startingbid
-        if bid_amount >= current_price:
-            bid = Bid.objects.create(listing=listing, user=user, amount=bid_amount)
-            messages.success(request, 'Bid placed successfilly')
-        else:
-            messages.error(request, 'Bid amount should be greater than the starting price.')
-        return redirect('listing', listing_id)    
+    if user==listing.owner:
+        messages.error(request, "Error: Can't place bid on own item.")
+        return redirect('listing', listing_id)
+    else:
+        try:
+            current_price = listing.highest_bid().amount
+            if bid_amount > current_price:
+                bid = Bid.objects.create(listing=listing, user=user, amount=bid_amount)
+                messages.success(request, 'Bid placed successfilly')
+            else:
+                messages.error(request, 'Error: Bid amount should be greater than the current bid')
+            return redirect('listing', listing_id)        
+        except:
+            current_price = listing.startingbid
+            if bid_amount >= current_price:
+                bid = Bid.objects.create(listing=listing, user=user, amount=bid_amount)
+                messages.success(request, 'Bid placed successfilly')
+            else:
+                messages.error(request, 'Error: Bid amount should be greater than the starting price.')
+            return redirect('listing', listing_id)    
 
+@login_required
 def closebid(request, listing_id):
     item = Item.objects.get(id=listing_id)
     # You may want to add additional security checks to make sure the user is the owner of the item
@@ -174,6 +184,7 @@ def closebid(request, listing_id):
         return redirect('listing', listing_id)
     return render(request, 'closebid.html')  
 
+@login_required
 def comment(request, listing_id):
     listing = Item.objects.get(id=listing_id)  
     user = request.user
@@ -181,6 +192,7 @@ def comment(request, listing_id):
     comment = Comment.objects.create(listing=listing, user=user, comment=message)
     return redirect('listing', listing_id)
 
+@login_required
 def viewcomments(request, listing_id):
     listing = Item.objects.get(id=listing_id)  
     user = request.user
@@ -188,7 +200,7 @@ def viewcomments(request, listing_id):
     comment = Comment.objects.create(listing=listing, user=user, comment=message)
     return redirect('listing', listing_id)
 
-    #if bid_amount > listing.highest_bid().amount:
+    #if bid_amount > listing.highest_bid().amount: 
         #bid = Bid.objects.create(listing=listing, user=user, amount=bid_amount)
         #messages.success(request, 'Bid placed successfilly')
     #else:

@@ -1,33 +1,8 @@
-{% extends "auctions/layout.html" %}
+{% extends "auctions/listing.html" %}
 
-{% block body %}
-    <h1>{{ listing.title }}</h1>
-    Category: <a href="{% url 'display_category' listing.category %}">{{ listing.category }}</a>
-    <h3>{{ listing.description }}</h3>
-    <h3>starting price: {{ listing.startingbid }}</h3>
-    <h2>Current Bid: {{ listing.highest_bid.amount }}</h2>
-    <br>
-    <img src ="{{ listing.item_img.url }}" class="img-responsive" alt="{{ title }}" style="max-height:300px">
-    {% if user in listing.watchlist_user.all %}
-        <form method="POST" action="{% url 'remove_from_watchlist' listing.id %}">
-            {% csrf_token %}
-            <input type="submit" value="Remove from Watchlist">
-        </form>
-    {% else %}
-        <form method="POST" action="{% url 'add_to_watchlist' listing.id %}">
-            {% csrf_token %}
-            <input type="submit" value="Add to Watchlist">
-        </form>
-    {% endif %}
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
-<form method="POST" action="{% url 'closebid' listing.id %}">
-    {% csrf_token %}
-    <input type="submit" value="Close Bid">
-</form>
+{% block owner %}
+    <form method="POST" action="{% url 'closebid' listing.id %}">
+        {% csrf_token %}
+        <input type="submit" value="Close Bid">
+    </form>
 {% endblock %}

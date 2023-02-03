@@ -6,8 +6,8 @@
         {% for comment in comments %}
             <div class="comment">
                 <p>{{ comment.text }}</p>
-                <p>by {{ comment.author }}</p>
-                <p>on {{ comment.created_date }}</p>
+                <h5>by {{ comment.user }}</h5>
+                <h6>on {{ comment.timestamp }}</h6>
             </div>
         {% endfor %}
     </div>

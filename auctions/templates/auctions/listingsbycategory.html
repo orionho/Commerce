@@ -3,10 +3,9 @@
 {% block body %}
 
 <title>Items by Category</title>
-
+<h3> Category: {{ category }}</h3>
     {% for listing in listings %}
-        <h2>{{ listing.title }}</h2>
+        <li><a href = "{% url 'listing' listing.id %}">{{ listing.title }}</a></li>
         <p>{{ listing.description }}</p>
-        <p>Category: {{ listing.get_category_display }}</p>
     {% endfor %}
 {% endblock %}

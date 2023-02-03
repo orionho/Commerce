@@ -1,4 +1,34 @@
-body {
-    padding: 10px;
+.body{
+    padding: 1000px;
+    margin: center;
+    color: red;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
+#Home-Page{
+    margin: center;
+    color: red;
+}
+
+#wrapper{
+    margin: right;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: red;
+}
+
+.center-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: red;
+  }
+
+.closedbid{
+    color: red;
+}
