@@ -1,48 +1,56 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h1>{{ listing.title }}</h1>
-    Category: <a href="{% url 'display_category' listing.category %}">{{ listing.category }}</a>
-    <h4>Description: {{ listing.description }}</h4>
-    <h4>Starting Price: {{ listing.startingbid }}</h4>
-    <h3>Current Bid: {{ listing.highest_bid.amount }}</h3>
-    <br>
-    <form method="POST" action="{% url 'place_bid' listing.id %}">
-        {% csrf_token %}
-        <label for="bid_amount">Bid Amount:</label>
-        <input type="number" name="bid_amount" min="{{ listing.highest_bid }}" step="0.01" required>
-        <input type="submit" value="Place Bid"> 
-    </form>
+<div class="item-page">
+    <div class = "item">
+        <h1>{{ listing.title }}</h1>
+        Category: <a href="{% url 'display_category' listing.category %}">{{ listing.category }}</a>
+        <h6>Description: {{ listing.description }}</h6>
+        <img src ="{{ listing.item_img.url }}" class="img-responsive" alt="{{ title }}" style="max-height:300px">
+        <h6>Starting Price: {{ listing.startingbid }}</h6>
+        <h5>Current Bid: {{ listing.highest_bid.amount }}</h5>
+        {% if user in listing.watchlist_user.all %}
+        <form method="POST" action="{% url 'remove_from_watchlist' listing.id %}">
+            {% csrf_token %}
+            <input type="submit" value="Remove from Watchlist">
+        </form>
+        {% else %}
+            <form method="POST" action="{% url 'add_to_watchlist' listing.id %}">
+                {% csrf_token %}
+                <input type="submit" value="Add to Watchlist">
+            </form>
+        {% endif %}
+        <br>
+        <form method="POST" action="{% url 'place_bid' listing.id %}">
+            {% csrf_token %}
+            <label for="bid_amount">Bid Amount:</label>
+            <input type="number" name="bid_amount" min="{{ listing.highest_bid }}" step="0.01" required>
+            <input type="submit" value="Place Bid"> 
+        </form>
+    </div>
     {% if messages %}
     <ul class="messages">
         {% for message in messages %}
         <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
         {% endfor %}
     </ul>
-{% endif %}
-    <img src ="{{ listing.item_img.url }}" class="img-responsive" alt="{{ title }}" style="max-height:300px">
-    {% if user in listing.watchlist_user.all %}
-        <form method="POST" action="{% url 'remove_from_watchlist' listing.id %}">
-            {% csrf_token %}
-            <input type="submit" value="Remove from Watchlist">
-        </form>
-    {% else %}
-        <form method="POST" action="{% url 'add_to_watchlist' listing.id %}">
-            {% csrf_token %}
-            <input type="submit" value="Add to Watchlist">
-        </form>
     {% endif %}
     {% for comment in comments %}
-        <p>{{ comment }}</p>
-        <h6>User: {{ comment.user }}</h6>
-        <h6>Date: {{ comment.timestamp }}</h6>
+        <div class = "item-comment">
+            <p>{{ comment }}</p>
+            <h7>User: {{ comment.user }}</h7>
+            <h7>Date: {{ comment.timestamp }}</h7>
+        </div>
     {% endfor %}
-<form action="{% url 'add_comment' listing.id %}" method="post">
-    {% csrf_token %}
-    <textarea name="comment" rows="4" cols="50"></textarea>
-    <input type="submit" value="Add Comment">
-  </form>
+    <div class="add-comment">
+        <form action="{% url 'add_comment' listing.id %}" method="post">
+            {% csrf_token %}
+            <textarea name="comment" rows="4" cols="50"></textarea>
+            <input type="submit" value="Add Comment">
+        </form>
+    </div>
 {% endblock %}
 
 {% block owner %}
 {% endblock %}
+</div>

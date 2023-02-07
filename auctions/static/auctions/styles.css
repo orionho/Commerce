@@ -1,9 +1,5 @@
-.body{
+body{
     padding: 10px;
-    margin: center;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .homepage-item{
@@ -12,10 +8,37 @@
     border: 1px solid black;
     padding: 25px;
     margin-bottom: 15px;
-    margin-right: 15px;
+    margin-right: 10x;
     width: 600px;
 }
 
+.item{
+    display: inline-block;
+    border-radius: 40px;
+    border: 1px solid black;
+    padding: 25px;
+    margin-bottom: 15px;
+    margin-right: 10x;
+    width: 600px;
+    left: 200px;
+    position: relative;
+}
+
+.item-page{
+    display: inline-block;
+}
+
+.add-comment{
+    border-radius: 20px;
+    border: 1px solid black;
+    padding: 15px;
+    margin-bottom: 15px;
+    margin-right: 10x;
+    width: 420px;
+    position: static;
+    right: 100px;
+    top: 1000px;
+}
 #wrapper{
     margin: right;
     display: flex;  
@@ -33,4 +56,17 @@
 
 .closedbid{
     color: red;
+}
+
+.item-comment{
+    display: block;
+    border-radius: 20px;
+    border: 1px solid black;
+    padding: 15px;
+    margin-bottom: 15px;
+    margin-right: 10x;
+    width: 200px;
+    position: relative;
+    left: 850px;
+    bottom: 600px;
 }
