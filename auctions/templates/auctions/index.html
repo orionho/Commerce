@@ -1,16 +1,18 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-<div class="center-content">
+<div>
     <h2>Active Listings</h2>
         <ul>
         {% for listing in listings %}
-            <li><a href = "{% url 'listing' listing.id %}">{{ listing.title }}</a></li>
+            <div class = "homepage-item">
+                <h4><a href = "{% url 'listing' listing.id %}">{{ listing.title }}</a></h4>
                 Category: <a href="{% url 'display_category' listing.category %}">{{ listing.category }}</a>
-                <p>{{ listing.description }}</p>
-                <h4>Starting Bid:{{ listing.startingbid }}</h4>
-                <h3>Current Bid: {{ listing.highest_bid.amount }}</h3>
+                <p>Description: {{ listing.description }}</p>
                 <img src ="{{ listing.item_img.url }}" class="img-responsive" alt="{{ title }}" style="max-height:300px">
+                <h6>Starting Price: {{ listing.startingbid }}</h4>
+                <h5>Current Bid: {{ listing.highest_bid.amount }}</h3>
+            </div>
         {% endfor %}
         </ul>
     </div>

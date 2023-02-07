@@ -8,9 +8,9 @@
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
         <link rel="stylesheet" href="styles.css">
     </head>
-    <div id = "wrapper">
+    <div>
         <body>
-            <h1 class = "closedbid">Auctions</h1>
+            <h1>Auctions</h1>
             <div>
                 {% if user.is_authenticated %}
                     Signed in as <strong>{{ user.username }}</strong>.
@@ -42,12 +42,12 @@
                 {% endif %}
             </ul>
             <hr>
-            <div class = "closedbid">
+            <div>
                 {% block body %}
                 {% endblock %}
             </div>
-            {% block owner %}
-            {% endblock %}
+                {% block owner %}
+                {% endblock %}
         </body>
     </div>
 </html>

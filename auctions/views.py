@@ -200,7 +200,7 @@ def viewcomments(request, listing_id):
     comment = Comment.objects.create(listing=listing, user=user, comment=message)
     return redirect('listing', listing_id)
 
-    #if bid_amount > listing.highest_bid().amount: 
+    #if bid_amount > listing.highest_bid().amount: might
         #bid = Bid.objects.create(listing=listing, user=user, amount=bid_amount)
         #messages.success(request, 'Bid placed successfilly')
     #else:
